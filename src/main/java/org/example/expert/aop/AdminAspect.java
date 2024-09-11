@@ -11,11 +11,14 @@ import java.util.Date;
 @Aspect
 @Component
 public class AdminAspect {
-    @Pointcut("@annotation(org.example.expert.annotation.AccessLog)")
-    private void accessLogAnnotation() {}
+    @Pointcut("execution(* org.example.expert.domain.comment.controller.CommentAdminController..*(..))")
+    private void adminDeleteComment() {}
 
-    @Around("accessLogAnnotation()")
-    public void adviceAnnotation(ProceedingJoinPoint joinPoint) throws Throwable {
+    @Pointcut("execution(* org.example.expert.domain.user.controller.UserAdminController..*(..))")
+    private void adminChangeUserRole() {}
+
+    @Around("adminDeleteComment() || adminChangeUserRole()")
+    public void execute(ProceedingJoinPoint joinPoint) throws Throwable {
         // 접근 로그
         log.trace("[{}] {} 접근",new Date(), joinPoint.getStaticPart());
 
