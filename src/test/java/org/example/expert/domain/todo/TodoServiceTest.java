@@ -104,7 +104,7 @@ public class TodoServiceTest {
     class GetTodoTest {
 
         @Test
-        public void todoId_entity_없어_실패() {
+        public void 할일이_없어서_에러_발생() {
             // given
             long todoId = 1L;
             given(todoRepository.findByIdWithUser(anyLong())).willReturn(Optional.empty());
