@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,10 @@ public class CommentService {
         User user = User.fromAuthUser(authUser);
         Todo todo = todoRepository.findById(todoId).orElseThrow(() ->
                 new InvalidRequestException("Todo not found"));
+
+        if (!todo.getManagers().stream().anyMatch(manager -> Objects.equals(manager.getId(), user.getId()))) {
+            throw new InvalidRequestException("Not manager of this todo");
+        }
 
         Comment newComment = new Comment(
                 commentSaveRequest.getContents(),
@@ -61,5 +66,20 @@ public class CommentService {
             dtoList.add(dto);
         }
         return dtoList;
+    }
+
+    @Transactional
+    public void deleteComments(long todoId) {
+        Todo todo = todoRepository.findById(todoId).orElseThrow(() ->
+                new InvalidRequestException("Todo not found")
+        );
+
+        showThrow();
+
+        commentRepository.deleteAll(todo.getComments());
+    }
+
+    public void showThrow() {
+        throw new RuntimeException("강제 오류 발생");
     }
 }
