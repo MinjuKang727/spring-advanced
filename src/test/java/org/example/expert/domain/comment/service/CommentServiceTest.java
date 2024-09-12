@@ -7,7 +7,6 @@ import org.example.expert.domain.comment.entity.Comment;
 import org.example.expert.domain.comment.repository.CommentRepository;
 import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.exception.InvalidRequestException;
-import org.example.expert.domain.common.exception.ServerException;
 import org.example.expert.domain.manager.entity.Manager;
 import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.todo.repository.TodoRepository;
@@ -25,7 +24,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,7 +47,7 @@ class CommentServiceTest {
     @Nested
     class SaveCommentTest {
         @Test
-        public void comment_등록_중_할일을_찾지_못해_에러가_발생한다() {
+        public void 댓글_등록_중_할일을_찾지_못해_에러가_발생한다() {
             // given
             long todoId = 1;
             CommentSaveRequest request = new CommentSaveRequest("contents");
@@ -65,7 +63,7 @@ class CommentServiceTest {
         }
 
         @Test
-        public void 담당자가_없을_때_todo의_담당자가_아니라서_실패() {
+        public void 담당자가_없을_때_인증사용자가_할일_담당자가_아니라서_에러_발생() {
             // given
             long todoId = 1;
             CommentSaveRequest request = new CommentSaveRequest("contents");
@@ -83,7 +81,7 @@ class CommentServiceTest {
         }
 
         @Test
-        public void 담당자가_있을_때_todo의_담당자가_아니라서_실패() {
+        public void 담당자가_있을_때_인증사용자가_할일_담당자가_아니라서_에러_발생() {
             // given
             long todoId = 1;
             CommentSaveRequest request = new CommentSaveRequest("contents");
@@ -138,7 +136,7 @@ class CommentServiceTest {
     @Nested
     class GetCommentsTest {
         @Test
-        public void 댓글_전체_조회_성공_댓글_0개일_때() {
+        public void 댓글_0개일_때_댓글_전체_조회_성공() {
             // given
             long todoId = 1L;
             List<Comment> commentList = new ArrayList<>();
@@ -155,7 +153,7 @@ class CommentServiceTest {
         }
 
         @Test
-        public void 댓글_전체_조회_성공_댓글_1개이상일_때() {
+        public void 댓글_1개이상일_때_댓글_전체_조회_성공() {
             // given
             long todoId = 1L;
             User user = spy(User.class);
@@ -179,7 +177,7 @@ class CommentServiceTest {
     @Nested
     class DeleteComments {
         @Test
-        public void 댓글_삭제_todoId_entity_없어서_실패() {
+        public void 할일이_없어서_에러_발생() {
             // given
             long todoId = 1L;
 
@@ -211,8 +209,7 @@ class CommentServiceTest {
     @DisplayName(value = "특강 때, 작성한 코드 테스트")
     class ExtraMethodTest {
         @Test
-        @DisplayName(value = "무조건 예외를 던지는 showThrow()메서드 정상 동작")
-        public void test_showThrow() {
+        public void 무조건_예외_던지기_성공() {
             // given
 
             // when
@@ -223,7 +220,7 @@ class CommentServiceTest {
         }
 
         @Test
-        @DisplayName(value = "진짜 객체와 spy 객체 차이")
+        @DisplayName(value = "진짜 객체와 spy 객체 차이 테스트")
         public void simple_spy() {
             Comment commentReal = new Comment();
             Comment commentSpy = spy(Comment.class);
