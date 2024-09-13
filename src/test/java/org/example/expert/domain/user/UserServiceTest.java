@@ -23,7 +23,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -213,6 +213,8 @@ public class UserServiceTest {
             userService.changePassword(userId, request);
 
             // then
+            verify(userRepository, times(1)).findById(userId);
+            verify(passwordEncoder, times(2)).matches(anyString(), anyString());
             assertTrue(passwordEncoder.matches(request.getNewPassword(), user.getPassword()));
         }
     }
@@ -244,6 +246,9 @@ public class UserServiceTest {
 
             // when
             UserResponse response = userService.getUser(userId);
+
+            // then
+            assertNotNull(response);
             assertEquals(user.getId(), response.getId());
             assertEquals(user.getEmail(), response.getEmail());
         }

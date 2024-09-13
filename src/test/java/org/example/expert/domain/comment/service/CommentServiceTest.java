@@ -24,6 +24,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -129,7 +130,10 @@ class CommentServiceTest {
             // then
             verify(commentRepository, times(1)).save(any(Comment.class));
             assertNotNull(response);
-
+            assertEquals(savedComment.getId(), response.getId());
+            assertEquals(savedComment.getContents(), response.getContents());
+            assertEquals(user.getId(), response.getUser().getId());
+            assertEquals(user.getEmail(), response.getUser().getEmail());
         }
     }
 
@@ -160,6 +164,7 @@ class CommentServiceTest {
             ReflectionTestUtils.setField(user, "id", 1L);
             ReflectionTestUtils.setField(user, "email", "user@gmail.com");
             Comment comment = new Comment("contents", user, new Todo());
+            ReflectionTestUtils.setField(comment, "id", 1L);
             List<Comment> commentList = List.of(comment);
 
             given(commentRepository.findByTodoIdWithUser(anyLong())).willReturn(commentList);

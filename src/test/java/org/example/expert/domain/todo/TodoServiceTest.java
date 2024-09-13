@@ -72,6 +72,12 @@ public class TodoServiceTest {
             verify(weatherClient, times(1)).getTodayWeather();
             verify(todoRepository, times(1)).save(any(Todo.class));
             assertNotNull(response);
+            assertEquals(savedTodo.getId(), response.getId());
+            assertEquals(savedTodo.getTitle(), response.getTitle());
+            assertEquals(savedTodo.getContents(), response.getContents());
+            assertEquals(savedTodo.getWeather(), response.getWeather());
+            assertEquals(user.getId(), response.getUser().getId());
+            assertEquals(user.getEmail(), response.getUser().getEmail());
         }
     }
 
@@ -97,6 +103,8 @@ public class TodoServiceTest {
             // then
             verify(todoRepository, times(1)).findAllByOrderByModifiedAtDesc(pageable);
             assertNotNull(todoResponses);
+            assertEquals(todoList.size(), todoResponses.getNumberOfElements());
+            assertEquals(size, todoResponses.getSize());
         }
     }
 
@@ -122,7 +130,7 @@ public class TodoServiceTest {
             long todoId = 1L;
             long userId = 2L;
 
-            User user = new User("user@gmail.com", "1234", UserRole.USER);
+            User user = new User("user@gmail.com", "PASSWORD1234", UserRole.USER);
             ReflectionTestUtils.setField(user, "id", userId);
             Todo todo = new Todo("title", "contents", "sunny", user);
             ReflectionTestUtils.setField(todo, "id", todoId);
@@ -135,6 +143,14 @@ public class TodoServiceTest {
             // then
             verify(todoRepository, times(1)).findByIdWithUser(anyLong());
             assertNotNull(todoResponse);
+            assertEquals(todo.getId(), todoResponse.getId());
+            assertEquals(todo.getTitle(), todoResponse.getTitle());
+            assertEquals(todo.getContents(),todoResponse.getContents());
+            assertEquals(todo.getWeather(), todoResponse.getWeather());
+            assertEquals(user.getId(), todoResponse.getUser().getId());
+            assertEquals(user.getEmail(), todoResponse.getUser().getEmail());
+            assertEquals(todo.getCreatedAt(), todoResponse.getCreatedAt());
+            assertEquals(todo.getModifiedAt(), todoResponse.getModifiedAt());
         }
     }
 }
