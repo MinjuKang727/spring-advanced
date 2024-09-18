@@ -9,8 +9,8 @@ public class CommentServiceRealTest {
     @Autowired
     private CommentService commentService;
 
-    @Test
-    public void 실제_댓글_테스트() {
-
-    }
+//    @Test
+//    public void 실제_댓글_테스트() {
+//
+//    }
 }
